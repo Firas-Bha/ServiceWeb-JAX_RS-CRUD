@@ -1,7 +1,9 @@
 package rest.entities;
+import javax.xml.bind.annotation.*;
+@XmlRootElement //échanger les élements XML avec la racine
+				//
 
 
-import javax.xml.bind.annotation.XmlElement;
 
 public class Employe {
 	
@@ -21,7 +23,7 @@ public class Employe {
 		this.prenom = prenom;
 	}
 	
-
+	@XmlElement(name="id")
 	public int getCin() {
 		return cin;
 	}

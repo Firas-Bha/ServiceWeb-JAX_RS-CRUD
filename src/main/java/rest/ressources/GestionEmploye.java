@@ -17,11 +17,11 @@ public class GestionEmploye {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String ajouterEmploye(Employe employe) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response ajouterEmploye(Employe employe) {
 		 if(employes.add(employe))
-	 return "Add Successful";
-		return "Echec";
+	 return Response.status(Status.CREATED).entity(employes).build();
+		return Response.status(Status.NOT_ACCEPTABLE).entity("Echec d'ajout").build();
 	  
 		
 	}
@@ -37,8 +37,10 @@ public class GestionEmploye {
 					
 	}
 	
-			
-	public Response getEmploye(int cin) {
+	@GET
+	@Path("/{CIN}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response getEmploye(@PathParam("CIN") int cin) {
 		for (Employe info:employes) {
 	       if(info.getCin()==cin) {
 	    	   return  Response.status(Status.FOUND)
@@ -52,9 +54,10 @@ public class GestionEmploye {
 		
 		
 	}
-	
-		
-	
+
+    @PUT
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
 	public Response updateEmploye(Employe e) {
 		int index= this.getIndexByCin(e.getCin());
 		if (index!=-1) {
@@ -65,16 +68,19 @@ public class GestionEmploye {
 		return Response.status(Status.NOT_FOUND).entity("update unsuccessful").build();
 	
 	}
-	
 
-	public boolean deleteEmpl(int cin){
+	@DELETE
+	@Path("{CIN}")
+	@Consumes({MediaType.APPLICATION_JSON})
+
+	public Response deleteEmpl(@PathParam("CIN") int cin){
 		int index= getIndexByCin(cin);
 		
 		if (index!=-1) {
 			employes.remove(index);
-			return true;
-		}else 
-			return false;
+			return Response.status(Status.OK).entity("delete successful").build();
+		}else
+			return Response.status(Status.NOT_FOUND).entity("delete unsuccessful").build();
 			
     }
 	
